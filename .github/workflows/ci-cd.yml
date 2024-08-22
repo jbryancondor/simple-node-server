@@ -1,0 +1,105 @@
+name: CI
+on:
+  push:
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version"
+        required: true
+
+env:
+  REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+  IMAGE_TAG: ${{ github.sha }}
+  ENABLE_DATABASE_MIGRATION: ${{ secrets.ENABLE_DATABASE_MIGRATION }}
+
+jobs:
+  continuos-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      # - name: Check style code
+      #   run: npm run lint
+
+      # - name: Build
+      #   run: npm run build
+
+      # - name: Test
+      #   run: npm test
+
+  continuos-deployment:
+    runs-on: ubuntu-latest
+    needs: continuos-integration
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Build container image
+        run: docker build . -f devops/Dockerfile -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $IMAGE_TAG)
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Remove all old images
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $IMAGE_TAG)
+
+      - name: envsubst-action
+        uses: danielr1996/envsubst-action@1.1.0
+        env:
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        with:
+          input: devops/config/.env.prod
+          output: devops/config/.env.prod
+
+      - name: Copy files via SSH action
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          timeout: 180s
+          passphrase: ${{ secrets.PASSPHRASE }}
+          source: "devops/docker-compose.prod.yml,devops/config/.env.prod"
+          target: "/opt"
+
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          timeout: 180s
+          envs: IMAGE_NAME,REGISTRY,IMAGE_TAG,ENABLE_DATABASE_MIGRATION
+          script: |
+            # Login to registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            # Set environments
+            export DOCKER_REGISTRY=$REGISTRY DOCKER_IMAGE_NAME=$IMAGE_NAME DOCKER_IMAGE_TAG=$IMAGE_TAG
+            # Stop services
+            docker compose -p despulgados --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod down
+            # Run services
+            docker compose -p despulgados --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod up -d
