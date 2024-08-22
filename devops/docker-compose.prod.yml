@@ -4,3 +4,5 @@ services:
     image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
     env_file:
       - ./config/.env.prod
+    ports:
+      - ${PORT_EXTERNAL}:${PORT}
