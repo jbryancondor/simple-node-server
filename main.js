@@ -17,8 +17,9 @@ app.use((req, res, next) => {
 
     console.log(`${fullPath} HEADER`, JSON.stringify(req.headers));
     console.log(`${fullPath} BODY:`, JSON.stringify(req.body));
+    console.log(`----------------------------------------`);
     next();
-  })
+})
 
 app.get('/', (req, res) => {
     res.status(200).end();
@@ -63,97 +64,100 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
         {
             "country": "COL",
             "items": [
-              {
-                "id": "REFID002",
-                "listPrice": 67203,
-                "measurementUnit": "un",
-                "merchantName": null,
-                "offerings": [
-                  {
-                    "type": "Warranty",
-                    "id": "5",
-                    "name": "1 year warranty",
-                    "price": 10000
-                  }
-                ],
-                "price": 67203,
-                "priceTags": [],
-                "priceValidUntil": "2024-10-01T22:58:28.143",
-                "quantity": 1,
-                "requestIndex": 0,
-                "seller": "1",
-                "unitMultiplier": 1
-              }
+                {
+                    "id": "REFID002",
+                    "listPrice": 67203,
+                    "measurementUnit": "un",
+                    "merchantName": null,
+                    "offerings": [
+                        {
+                            "type": "Warranty",
+                            "id": "5",
+                            "name": "1 year warranty",
+                            "price": 10000
+                        }
+                    ],
+                    "price": 67203,
+                    "priceTags": [],
+                    "priceValidUntil": "2024-10-01T22:58:28.143",
+                    "quantity": 1,
+                    "requestIndex": 0,
+                    "seller": "1",
+                    "unitMultiplier": 1
+                }
             ],
             "logisticsInfo": [
-              {
-                "itemIndex": 0,
-                "quantity": 6,
-                "shipsTo": [
-                  "COL"
-                ],
-                "slas": [
-                  {
-                    "id": "Curbside pickup",
-                    "deliveryChannel": "pickup-in-point",
-                    "name": "Curbside pickup",
-                    "shippingEstimate": "0bd",
-                    "price": 0,
-                    "availableDeliveryWindows": [
-                      {
-                        "startDateUtc": "2024-02-08T08:00:00+00:00",
-                        "endDateUtc": "2024-02-10T13:00:00+00:00",
-                        "price": 0
-                      }
+                {
+                    "itemIndex": 0,
+                    "quantity": 6,
+                    "shipsTo": [
+                        "COL"
                     ],
-                    "pickupStoreInfo": {
-                      "isPickupStore": true,
-                      "friendlyName": "Santa Felicidade",
-                      "address": {
-                    "addressType": "pickup",
-                    "receiverName": "Juliana",
-                    "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
-                    "postalCode": "110110",
-                    "city": "Bogotá DC",
-                    "state": "Bogotá",
-                    "country": "COL",
-                    "street": "Calle 93",
-                    "number": "18",
-                    "neighborhood": "El chicó",
-                    "complement": "Loja 10",
-                    "reference": "Next to the unicorn statue",
-                    "geoCoordinates": [
-                        4.678248,
-                        -74.054796
+                    "slas": [
+                        {
+                            "id": "Curbside pickup",
+                            "deliveryChannel": "pickup-in-point",
+                            "name": "Curbside pickup",
+                            "shippingEstimate": "0bd",
+                            "price": 0,
+                            "availableDeliveryWindows": [
+                                {
+                                    "startDateUtc": "2024-02-08T08:00:00+00:00",
+                                    "endDateUtc": "2024-02-10T13:00:00+00:00",
+                                    "price": 0
+                                }
+                            ],
+                            "pickupStoreInfo": {
+                                "isPickupStore": true,
+                                "friendlyName": "Santa Felicidade",
+                                "address": {
+                                    "addressType": "pickup",
+                                    "receiverName": "Juliana",
+                                    "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
+                                    "postalCode": "110110",
+                                    "city": "Bogotá DC",
+                                    "state": "Bogotá",
+                                    "country": "COL",
+                                    "street": "Calle 93",
+                                    "number": "18",
+                                    "neighborhood": "El chicó",
+                                    "complement": "Loja 10",
+                                    "reference": "Next to the unicorn statue",
+                                    "geoCoordinates": [
+                                        4.678248,
+                                        -74.054796
+                                    ]
+                                },
+                                "additionalInfo": ""
+                            }
+                        }
+                    ],
+                    "stockBalance": 199,
+                    "deliveryChannels": [
+                        {
+                            "id": "delivery",
+                            "stockBalance": 179
+                        },
+                        {
+                            "id": "pickup-in-point",
+                            "stockBalance": 20
+                        }
                     ]
-                },
-                      "additionalInfo": ""
-                    }
-                  }
-                ],
-                "stockBalance": 199,
-                "deliveryChannels": [
-                  {
-                    "id": "delivery",
-                    "stockBalance": 179
-                  },
-                  {
-                    "id": "pickup-in-point",
-                    "stockBalance": 20
-                  }
-                ]
-              }
+                }
             ],
             "postalCode": "80250000",
             "allowMultipleDeliveries": true
-          }
+        }
     ).status(200).end();
 })
 
 app.post('/pvt/orders', (req, res) => {
+
+    const { marketplaceOrderId, clientProfileData: { email }, shippingData } = req.body[0];
+
     res.json({
         "isTest": true,
-        "marketplaceOrderId": "1457570502001-01",
+        "marketplaceOrderId": marketplaceOrderId,
         "orderId": "7890",
         "followUpEmail": "srivas@addi.com",
         "items": [
@@ -177,7 +181,7 @@ app.post('/pvt/orders', (req, res) => {
             }
         ],
         "clientProfileData": {
-            "email": "293b18ed65644179ad712147b23a783a@ct.vtex.com.br",
+            "email": email,
             "firstName": "Sergio",
             "lastName": "Rivas",
             "documentType": "cedulaCOL",
@@ -191,67 +195,7 @@ app.post('/pvt/orders', (req, res) => {
             "isCorporate": false,
             "userProfileId": null
         },
-        "shippingData": {
-            "isFOB": false,
-            "address": {
-                "addressType": "pickup",
-                "receiverName": "Juliana",
-                "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
-                "postalCode": "110110",
-                "city": "Bogotá DC",
-                "state": "Bogotá",
-                "country": "COL",
-                "street": "Calle 93",
-                "number": "18",
-                "neighborhood": "El chicó",
-                "complement": "Loja 10",
-                "reference": "Next to the unicorn statue",
-                "geoCoordinates": [
-                    4.678248,
-                    -74.054796
-                ]
-            },
-            "selectedAddresses": [
-                {
-                    "addressType": "pickup",
-                    "receiverName": "Juliana",
-                    "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
-                    "postalCode": "19256",
-                    "city": "Bogotá DC",
-                    "state": "Bogotá",
-                    "country": "COL",
-                    "street": "Calle 93",
-                    "number": "18",
-                    "neighborhood": "El chicó",
-                    "complement": "Loja 10",
-                    "reference": "Next to the unicorn statue",
-                    "geoCoordinates": [
-                        4.678248,
-                        -74.054796
-                    ]
-                }
-            ],
-            "logisticsInfo": [
-                {
-                    "itemIndex": 0,
-                    "selectedSla": "Curbside pickup",
-                    "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
-                    "selectedDeliveryChannel": "pickup-in-point",
-                    "deliveryIds": [],
-                    "lockTTL": "10d",
-                    "shippingEstimate": "0bd",
-                    "price": 0,
-                    "deliveryWindow": {
-                        "startDateUtc": "2024-02-08T08:00:00+00:00",
-                        "endDateUtc": "2024-02-10T13:00:00+00:00",
-                        "price": 0,
-                        "listPrice": 0
-                    }
-                }
-            ],
-            "trackingHints": [],
-            "contactInformation": []
-        },
+        "shippingData": shippingData,
         "customData": null,
         "paymentData": null,
         "allowMultipleDeliveries": true
