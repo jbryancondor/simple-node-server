@@ -14,12 +14,21 @@ app.use((req, res, next) => {
     const method = req.method;
     const path = req.url;
     const fullPath = `${method} ${hostname}${path} HTTP/${httpVersion}`;
+    let originalSend = res.send;
 
-    console.log(`${fullPath} HEADER`, JSON.stringify(req.headers));
-    console.log(`${fullPath} BODY:`, JSON.stringify(req.body));
-    console.log(`----------------------------------------`);
+    console.log(`${fullPath} [ REQ HEADER ]:`, JSON.stringify(req.headers));
+    console.log(`${fullPath} [ REQ BODY ]:`, JSON.stringify(req.body));
+    console.log('----');
+
+    res.send = function (data) {
+        console.log(`${fullPath} [ RESP BODY ]:`, JSON.stringify(JSON.parse(data)));
+        console.log(`----------------------------------------`);
+        return originalSend.call(this, data);
+    };
+
     next();
-})
+});
+
 
 app.get('/', (req, res) => {
     res.status(200).end();
@@ -154,8 +163,7 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
 app.post('/pvt/orders', (req, res) => {
 
     const { marketplaceOrderId, clientProfileData: { email }, shippingData } = req.body[0];
-
-    res.json({
+    const result = {
         "isTest": true,
         "marketplaceOrderId": marketplaceOrderId,
         "orderId": "7890",
@@ -199,7 +207,9 @@ app.post('/pvt/orders', (req, res) => {
         "customData": null,
         "paymentData": null,
         "allowMultipleDeliveries": true
-    }).status(200).end();
+    };
+
+    res.json([result]).status(200).end();
 })
 
 app.listen(port, () => {
