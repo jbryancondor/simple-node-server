@@ -8,55 +8,57 @@ const port = 3000
 app.use(cors());
 app.use(bodyParser.json())
 
+app.use((req, res, next) => {
+    const httpVersion = req.httpVersion;
+    const hostname = req.headers.host;
+    const method = req.method;
+    const path = req.url;
+    const fullPath = `${method} ${hostname}${path} HTTP/${httpVersion}`;
+
+    console.log(`${fullPath} HEADER`, JSON.stringify(req.headers));
+    console.log(`${fullPath} BODY:`, JSON.stringify(req.body));
+    next();
+  })
+
 app.get('/', (req, res) => {
-    console.log('GET');
     res.status(200).end();
 })
 
 app.post('/', (req, res) => {
-    console.log('POST body:', req.body);
     res.status(200).end();
 })
 
 app.post('/', (req, res) => {
-    console.log('PUT');
     res.status(200).end();
 })
 
 app.get('/webhook', (req, res) => {
-    console.log('GET webhook');
     res.status(200).end();
 })
 
 app.post('/webhook', (req, res) => {
-    console.log('POST webhook');
     res.status(200).end();
 })
 
 app.put('/webhook', (req, res) => {
-    console.log('POST webhook');
     res.status(200).end();
 })
 
 app.post('/', (req, res) => {
-    console.log('POST body:', req.body);
     res.status(200).end();
 })
 
 
 app.post('/api/pvt/orderForms/simulation', (req, res) => {
-    console.log('POST body:', req.body);
     res.status(200).end();
 })
 
 app.post('/api/pvt/orders', (req, res) => {
-    console.log('POST body:', req.body);
     res.status(200).end();
 })
 
 
 app.post('/pvt/orderForms/simulation', (req, res) => {
-    console.log('POST body:', req.body);
     res.json(
         {
             "country": "COL",
@@ -149,9 +151,6 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
 })
 
 app.post('/pvt/orders', (req, res) => {
-    console.log('POST /pvt/orders');
-    console.log('POST body:', req.body);
-
     res.json({
         "isTest": true,
         "marketplaceOrderId": "1457570502001-01",
