@@ -70,4 +70,3 @@ jobs:
             docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod down --remove-orphans
             # Run services
             docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod up -d --remove-orphans
- --remove-orphans
