@@ -213,7 +213,7 @@ app.post('/pvt/orders', (req, res) => {
 })
 
 app.post('/pvt/orders/:orderId/cancel', (req, res) => {
-    const orderId = req.params("orderId");
+    const orderId = req.params.orderId;
     console.log(`orderId: ${orderId}`)
 
     const { marketplaceOrderId } = req.body;
@@ -222,7 +222,7 @@ app.post('/pvt/orders/:orderId/cancel', (req, res) => {
         "orderId": orderId,
         "marketplaceOrderId": marketplaceOrderId
     };
-    res.json(result).status(200).end();
+    res.status(200).json(result).end();
 })
 
 app.listen(port, () => {
