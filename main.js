@@ -193,7 +193,7 @@ app.post('/pvt/orders', (req, res) => {
             {
                 "id": "REFID002",
                 "quantity": 1,
-                "seller": "1",
+                "seller": "bcdwoocommerceseller",
                 "commission": 1500,
                 "freightCommission": 1000,
                 "price": 67200,
