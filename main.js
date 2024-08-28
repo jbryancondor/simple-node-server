@@ -15,7 +15,7 @@ const logger = winston.createLogger({
         winston.format.json(),
         // winston.format.prettyPrint()
     ),
-    defaultMeta: { service: 'bcd-simple-server' },
+
     transports: [
         // - Write all logs with importance level of `error` or less to `error.log`
         // - Write all logs with importance level of `info` or less to `combined.log`
@@ -89,32 +89,12 @@ app.post('/api/pvt/orders', (req, res) => {
 
 
 app.post('/pvt/orderForms/simulation', (req, res) => {
+    const body = req.body;
+
     res.json(
         {
             "country": "COL",
-            "items": [
-                {
-                    "id": "REFID002",
-                    "listPrice": 67203,
-                    "measurementUnit": "un",
-                    "merchantName": null,
-                    "offerings": [
-                        {
-                            "type": "Warranty",
-                            "id": "5",
-                            "name": "1 year warranty",
-                            "price": 10000
-                        }
-                    ],
-                    "price": 67203,
-                    "priceTags": [],
-                    "priceValidUntil": "2024-10-01T22:58:28.143",
-                    "quantity": 1,
-                    "requestIndex": 0,
-                    "seller": "1",
-                    "unitMultiplier": 1
-                }
-            ],
+            "items": body.items,
             "logisticsInfo": [
                 {
                     "itemIndex": 0,
@@ -182,32 +162,14 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
 
 app.post('/pvt/orders', (req, res) => {
 
-    const { marketplaceOrderId, clientProfileData: { email }, shippingData } = req.body[0];
+    const { marketplaceOrderId, clientProfileData: { email }, shippingData, items } = req.body[0];
+
     const result = {
         "isTest": true,
         "marketplaceOrderId": marketplaceOrderId,
         "orderId": uuidv4(),
         "followUpEmail": "srivas@addi.com",
-        "items": [
-            {
-                "id": "REFID002",
-                "quantity": 1,
-                "seller": "1",
-                "commission": 1500,
-                "freightCommission": 1000,
-                "price": 67200,
-                "bundleItems": [],
-                "itemAttachment": {
-                    "name": null,
-                    "content": {}
-                },
-                "attachments": [],
-                "priceTags": [],
-                "measurementUnit": "un",
-                "unitMultiplier": 1,
-                "isGift": false
-            }
-        ],
+        "items": items,
         "clientProfileData": {
             "email": email,
             "firstName": "Sergio",
