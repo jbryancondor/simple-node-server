@@ -67,6 +67,7 @@ jobs:
             # Set environments
             export DOCKER_REGISTRY=$REGISTRY DOCKER_IMAGE_NAME=$IMAGE_NAME DOCKER_IMAGE_TAG=$IMAGE_TAG
             # Stop services
-            docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod down
+            docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod down --remove-orphans
             # Run services
-            docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod up -d
+            docker compose -p bcd --file /opt/devops/docker-compose.prod.yml --env-file /opt/devops/config/.env.prod up -d --remove-orphans
+ --remove-orphans
