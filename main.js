@@ -222,7 +222,7 @@ app.post('/pvt/orders/:orderId/cancel', (req, res) => {
         "orderId": orderId,
         "marketplaceOrderId": marketplaceOrderId
     };
-    res.status(400).end();
+    res.status(200).end();
 })
 
 app.listen(port, () => {
