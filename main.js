@@ -37,10 +37,10 @@ app.use((req, res, next) => {
 
     let originalSend = res.send;
 
-    logger.info(`${fullPath} Request`, { headers: req.headers, body: req.body });
+    logger.info(fullPath, { type: 'REQUEST', headers: req.headers, body: req.body });
 
     res.send = function (data) {
-        logger.info(`${fullPath} Response`, { body: JSON.parse(data) });
+        logger.info(fullPath, { type: 'RESPONSE', body: JSON.parse(data) });
         logger.warn(`----------------------------------------`);
         return originalSend.call(this, data);
     };
