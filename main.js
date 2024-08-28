@@ -169,7 +169,30 @@ app.post('/pvt/orders', (req, res) => {
         "marketplaceOrderId": marketplaceOrderId,
         "orderId": uuidv4(),
         "followUpEmail": "srivas@addi.com",
+<<<<<<< HEAD
         "items": items,
+=======
+        "items": [
+            {
+                "id": "REFID002",
+                "quantity": 1,
+                "seller": "bcdwoocommerceseller",
+                "commission": 1500,
+                "freightCommission": 1000,
+                "price": 67200,
+                "bundleItems": [],
+                "itemAttachment": {
+                    "name": null,
+                    "content": {}
+                },
+                "attachments": [],
+                "priceTags": [],
+                "measurementUnit": "un",
+                "unitMultiplier": 1,
+                "isGift": false
+            }
+        ],
+>>>>>>> d01946df1f2e322a2873b28ede9bbd4b1d64763c
         "clientProfileData": {
             "email": email,
             "firstName": "Sergio",
