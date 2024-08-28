@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const winston = require('winston')
+const { v4: uuidv4 } = require('uuid');
 
 const app = express()
 const port = 3000
@@ -186,7 +187,7 @@ app.post('/pvt/orders', (req, res) => {
     const result = {
         "isTest": true,
         "marketplaceOrderId": marketplaceOrderId,
-        "orderId": "7890",
+        "orderId": uuidv4(),
         "followUpEmail": "srivas@addi.com",
         "items": [
             {
