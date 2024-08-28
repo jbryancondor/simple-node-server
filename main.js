@@ -36,11 +36,11 @@ app.use((req, res, next) => {
 
     let originalSend = res.send;
 
-    logger.info(`${fullPath} Request Headers`, JSON.stringify(req.headers));
-    logger.info(`${fullPath} Request Body`, JSON.stringify(req.body));
+    logger.info(`${fullPath} Request Headers`, { content: req.headers });
+    logger.info(`${fullPath} Request Body`, { content: req.body });
 
     res.send = function (data) {
-        logger.info(`${fullPath} Response Body`, JSON.stringify(JSON.parse(data)));
+        logger.info(`${fullPath} Response Body`, { content: JSON.parse(data) });
         logger.warn(`----------------------------------------`);
         return originalSend.call(this, data);
     };
