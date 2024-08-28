@@ -212,6 +212,11 @@ app.post('/pvt/orders', (req, res) => {
     res.json([result]).status(200).end();
 })
 
+app.post('/pvt/orders/:orderId/cancel', (req, res) => {
+    console.log(`params: ${req.params}`)
+    res.status(200).end();
+})
+
 app.listen(port, () => {
     console.log(`Simple Server app listening on port ${port}`)
 })
