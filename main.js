@@ -1,9 +1,28 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const winston = require('winston')
 
 const app = express()
 const port = 3000
+
+const logger = winston.createLogger({
+    level: 'info',
+    levels: winston.config.npm.levels,
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+        // winston.format.prettyPrint()
+    ),
+    defaultMeta: { service: 'bcd-simple-server' },
+    transports: [
+        // - Write all logs with importance level of `error` or less to `error.log`
+        // - Write all logs with importance level of `info` or less to `combined.log`
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+        new winston.transports.Console()
+    ],
+});
 
 app.use(cors());
 app.use(bodyParser.json())
@@ -14,15 +33,15 @@ app.use((req, res, next) => {
     const method = req.method;
     const path = req.url;
     const fullPath = `${method} ${hostname}${path} HTTP/${httpVersion}`;
+
     let originalSend = res.send;
 
-    console.log(`${fullPath} [ REQ HEADER ]:`, JSON.stringify(req.headers));
-    console.log(`${fullPath} [ REQ BODY ]:`, JSON.stringify(req.body));
-    console.log('----');
+    logger.info(`${fullPath} Request Headers`, JSON.stringify(req.headers));
+    logger.info(`${fullPath} Request Body`, JSON.stringify(req.body));
 
     res.send = function (data) {
-        console.log(`${fullPath} [ RESP BODY ]:`, JSON.stringify(JSON.parse(data)));
-        console.log(`----------------------------------------`);
+        logger.info(`${fullPath} Response Body`, JSON.stringify(JSON.parse(data)));
+        logger.warn(`----------------------------------------`);
         return originalSend.call(this, data);
     };
 
@@ -31,6 +50,7 @@ app.use((req, res, next) => {
 
 
 app.get('/', (req, res) => {
+    logger.info('hello word!');
     res.status(200).end();
 })
 
@@ -213,5 +233,5 @@ app.post('/pvt/orders', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Simple Server app listening on port ${port}`)
+    logger.info(`Simple Server app listening on port ${port}`)
 })
