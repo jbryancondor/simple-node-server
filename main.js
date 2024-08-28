@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 
 
 app.get('/', (req, res) => {
-    logger.info('hello word!');
+    logger.info(`hello word!, uuid: ${uuidv4()}`);
     res.status(200).end();
 })
 
