@@ -37,7 +37,8 @@ app.use((req, res, next) => {
 
     let originalSend = res.send;
 
-    logger.info(fullPath, { type: 'REQUEST', headers: req.headers, body: req.body, params: req.params, status: req.statusCode });
+    const { headers, body, params, statusCode, query } = req;
+    logger.info(fullPath, { type: 'REQUEST', headers, body, params, query, statusCode });
 
     res.send = function (data) {
         logger.info(fullPath, { type: 'RESPONSE', body: JSON.parse(data) });
