@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const winston = require('winston')
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuid } = require('uuid');
 
 const app = express()
 const port = 3000
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
     let originalSend = res.send;
 
-    logger.info(fullPath, { type: 'REQUEST', headers: req.headers, body: req.body });
+    logger.info(fullPath, { type: 'REQUEST', headers: req.headers, body: req.body, params: req.params, status: req.statusCode });
 
     res.send = function (data) {
         logger.info(fullPath, { type: 'RESPONSE', body: JSON.parse(data) });
@@ -50,12 +50,7 @@ app.use((req, res, next) => {
 
 
 app.get('/', (req, res) => {
-    logger.info(`hello word!, uuid: ${uuidv4()}`);
-    res.status(200).end();
-})
-
-app.post('/', (req, res) => {
-    res.status(200).end();
+    res.json({ status: "OK" }).status(200).end();
 })
 
 app.post('/', (req, res) => {
@@ -71,19 +66,6 @@ app.post('/webhook', (req, res) => {
 })
 
 app.put('/webhook', (req, res) => {
-    res.status(200).end();
-})
-
-app.post('/', (req, res) => {
-    res.status(200).end();
-})
-
-
-app.post('/api/pvt/orderForms/simulation', (req, res) => {
-    res.status(200).end();
-})
-
-app.post('/api/pvt/orders', (req, res) => {
     res.status(200).end();
 })
 
@@ -181,12 +163,11 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
 })
 
 app.post('/pvt/orders', (req, res) => {
-
     const { marketplaceOrderId, clientProfileData: { email }, shippingData, items, customData } = req.body[0];
 
     const result = {
         "marketplaceOrderId": marketplaceOrderId,
-        "orderId": uuidv4(),
+        "orderId": uuid(),
         "followUpEmail": "srivas@addi.com",
         "items": [
             {
@@ -234,8 +215,6 @@ app.post('/pvt/orders', (req, res) => {
 
 app.post('/pvt/orders/:orderId/cancel', (req, res) => {
     const orderId = req.params.orderId;
-    console.log(`orderId: ${orderId}`)
-
     const { marketplaceOrderId } = req.body;
 
     const result = {
