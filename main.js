@@ -95,8 +95,8 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
         "country": "COL",
         "items": [
           {
-            "id": "REFID002",
-            "listPrice": 67203,
+            "id": body.items[0].id,
+            "listPrice": 85000,
             "measurementUnit": "un",
             "merchantName": null,
             "offerings": [
@@ -107,10 +107,10 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
                 "price": 10000
               }
             ],
-            "price": 67203,
+            "price": 85000,
             "priceTags": [],
             "priceValidUntil": "2024-10-01T22:58:28.143",
-            "quantity": 1,
+            "quantity": body.items[0].quantity,
             "requestIndex": 0,
             "seller": body.items[0].seller,
             "unitMultiplier": 1
@@ -189,7 +189,26 @@ app.post('/pvt/orders', (req, res) => {
         "marketplaceOrderId": marketplaceOrderId,
         "orderId": uuidv4(),
         "followUpEmail": "srivas@addi.com",
-        "items": items,
+        "items": [
+            {
+                "id": items[0].id,
+                "quantity": items[0].quantity,
+                "seller": items[0].seller,
+                "commission": 1500,
+                "freightCommission": 1000,
+                "price": items[0].price,
+                "bundleItems": [],
+                "itemAttachment": {
+                    "name": null,
+                    "content": {}
+                },
+                "attachments": [],
+                "priceTags": [],
+                "measurementUnit": "un",
+                "unitMultiplier": 1,
+                "isGift": false
+            }
+        ],
         "clientProfileData": {
             "email": email,
             "firstName": "Sergio",
