@@ -97,7 +97,8 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
                 "priceValidUntil": "2024-12-01T22:58:28.143",
                 "quantity": body.items[0].quantity,
                 "requestIndex": 0,
-                "seller": body.items[0].seller,
+                // "seller": body.items[0].seller,
+                "seller": "bcdwoocommerceseller",
                 "unitMultiplier": 1
             }
         ],
