@@ -94,98 +94,97 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
     res.json({
         "country": "COL",
         "items": [
-          {
-            "id": body.items[0].id,
-            "listPrice": 85000,
-            "measurementUnit": "un",
-            "merchantName": null,
-            "offerings": [
-              {
-                "type": "Warranty",
-                "id": "5",
-                "name": "1 year warranty",
-                "price": 10000
-              }
-            ],
-            "price": 85000,
-            "priceTags": [],
-            "priceValidUntil": "2024-10-01T22:58:28.143",
-            "quantity": body.items[0].quantity,
-            "requestIndex": 0,
-            "seller": body.items[0].seller,
-            "unitMultiplier": 1
-          }
+            {
+                "id": body.items[0].id,
+                "listPrice": 85000,
+                "measurementUnit": "un",
+                "merchantName": null,
+                "offerings": [
+                    {
+                        "type": "Warranty",
+                        "id": "5",
+                        "name": "1 year warranty",
+                        "price": 10000
+                    }
+                ],
+                "price": 85000,
+                "priceTags": [],
+                "priceValidUntil": "2024-12-01T22:58:28.143",
+                "quantity": body.items[0].quantity,
+                "requestIndex": 0,
+                "seller": body.items[0].seller,
+                "unitMultiplier": 1
+            }
         ],
         "logisticsInfo": [
-          {
-            "itemIndex": 0,
-            "quantity": 6,
-            "shipsTo": [
-              "COL"
-            ],
-            "slas": [
-              {
-                "id": "Curbside pickup",
-                "deliveryChannel": "pickup-in-point",
-                "name": "Curbside pickup",
-                "shippingEstimate": "0bd",
-                "price": 0,
-                "availableDeliveryWindows": [
-                  {
-                    "startDateUtc": "2024-02-08T08:00:00+00:00",
-                    "endDateUtc": "2024-02-10T13:00:00+00:00",
-                    "price": 0
-                  }
+            {
+                "itemIndex": 0,
+                "quantity": 2,
+                "shipsTo": [
+                    "COL"
                 ],
-                "pickupStoreInfo": {
-                  "isPickupStore": true,
-                  "friendlyName": "Santa Felicidade",
-                  "address": {
-                "addressType": "pickup",
-                "receiverName": "Juliana",
-                "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
-                "postalCode": "110110",
-                "city": "Bogotá DC",
-                "state": "Bogotá",
-                "country": "COL",
-                "street": "Calle 93",
-                "number": "18",
-                "neighborhood": "El chicó",
-                "complement": "Loja 10",
-                "reference": "Next to the unicorn statue",
-                "geoCoordinates": [
-                    4.678248,
-                    -74.054796
+                "slas": [
+                    {
+                        "id": "Curbside pickup",
+                        "deliveryChannel": "pickup-in-point",
+                        "name": "Curbside pickup",
+                        "shippingEstimate": "0bd",
+                        "price": 0,
+                        "availableDeliveryWindows": [
+                            {
+                                "startDateUtc": "2024-11-08T08:00:00+00:00",
+                                "endDateUtc": "2024-11-10T13:00:00+00:00",
+                                "price": 0
+                            }
+                        ],
+                        "pickupStoreInfo": {
+                            "isPickupStore": true,
+                            "friendlyName": "Santa Felicidade",
+                            "address": {
+                                "addressType": "pickup",
+                                "receiverName": "Juliana",
+                                "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
+                                "postalCode": "110110",
+                                "city": "Bogotá DC",
+                                "state": "Bogotá",
+                                "country": "COL",
+                                "street": "Calle 93",
+                                "number": "18",
+                                "neighborhood": "El chicó",
+                                "complement": "Loja 10",
+                                "reference": "Next to the unicorn statue",
+                                "geoCoordinates": [
+                                    4.678248,
+                                    -74.054796
+                                ]
+                            },
+                            "additionalInfo": ""
+                        }
+                    }
+                ],
+                "stockBalance": 199,
+                "deliveryChannels": [
+                    {
+                        "id": "delivery",
+                        "stockBalance": 179
+                    },
+                    {
+                        "id": "pickup-in-point",
+                        "stockBalance": 20
+                    }
                 ]
-            },
-                  "additionalInfo": ""
-                }
-              }
-            ],
-            "stockBalance": 199,
-            "deliveryChannels": [
-              {
-                "id": "delivery",
-                "stockBalance": 179
-              },
-              {
-                "id": "pickup-in-point",
-                "stockBalance": 20
-              }
-            ]
-          }
+            }
         ],
         "postalCode": "80250000",
-        "allowMultipleDeliveries": true
-      }).status(200).end();
+        // "allowMultipleDeliveries": true
+    }).status(200).end();
 })
 
 app.post('/pvt/orders', (req, res) => {
 
-    const { marketplaceOrderId, clientProfileData: { email }, shippingData, items } = req.body[0];
+    const { marketplaceOrderId, clientProfileData: { email }, shippingData, items, customData } = req.body[0];
 
     const result = {
-        "isTest": true,
         "marketplaceOrderId": marketplaceOrderId,
         "orderId": uuidv4(),
         "followUpEmail": "srivas@addi.com",
@@ -194,8 +193,8 @@ app.post('/pvt/orders', (req, res) => {
                 "id": items[0].id,
                 "quantity": items[0].quantity,
                 "seller": items[0].seller,
-                "commission": 1500,
-                "freightCommission": 1000,
+                "commission": items[0].commission,
+                "freightCommission": items[0].freightCommission,
                 "price": items[0].price,
                 "bundleItems": [],
                 "itemAttachment": {
@@ -225,7 +224,7 @@ app.post('/pvt/orders', (req, res) => {
             "userProfileId": null
         },
         "shippingData": shippingData,
-        "customData": null,
+        "customData": customData,
         "paymentData": null,
         "allowMultipleDeliveries": true
     };
