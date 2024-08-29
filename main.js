@@ -74,22 +74,24 @@ app.put('/webhook', (req, res) => {
 app.post('/pvt/orderForms/simulation', (req, res) => {
     const body = req.body;
 
+    const MARKETPLACE_RESPONSABLE_FOR_PROCESSING_PAYMENTS = null;
+
     res.json({
         "country": "COL",
         "items": [
             {
                 "id": body.items[0].id,
-                "listPrice": 85000,
+                "listPrice": body.items[0].listPrice,
                 "measurementUnit": "un",
-                "merchantName": null,
-                "offerings": [
-                    {
-                        "type": "Warranty",
-                        "id": "5",
-                        "name": "1 year warranty",
-                        "price": 10000
-                    }
-                ],
+                "merchantName": MARKETPLACE_RESPONSABLE_FOR_PROCESSING_PAYMENTS,
+                // "offerings": [
+                //     {
+                //         "type": "Warranty",
+                //         "id": "5",
+                //         "name": "1 year warranty",
+                //         "price": 10000
+                //     }
+                // ],
                 "price": 85000,
                 "priceTags": [],
                 "priceValidUntil": "2024-12-01T22:58:28.143",
@@ -108,24 +110,24 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
                 ],
                 "slas": [
                     {
-                        "id": "Curbside pickup",
+                        "id": "bcd pickup",
                         "deliveryChannel": "pickup-in-point",
-                        "name": "Curbside pickup",
+                        "name": "bcd pickup",
                         "shippingEstimate": "0bd",
                         "price": 0,
                         "availableDeliveryWindows": [
                             {
-                                "startDateUtc": "2024-11-08T08:00:00+00:00",
-                                "endDateUtc": "2024-11-10T13:00:00+00:00",
+                                "startDateUtc": "2024-11-05T08:00:00+00:00",
+                                "endDateUtc": "2024-11-25T13:00:00+00:00",
                                 "price": 0
                             }
                         ],
                         "pickupStoreInfo": {
                             "isPickupStore": true,
-                            "friendlyName": "Santa Felicidade",
+                            "friendlyName": "bcd store friendly name",
                             "address": {
                                 "addressType": "pickup",
-                                "receiverName": "Juliana",
+                                "receiverName": "Raul Entregas",
                                 "addressId": "548304ed-dd40-4416-b12b-4b32bfa7b1e0",
                                 "postalCode": "110110",
                                 "city": "Bogotá DC",
@@ -143,72 +145,88 @@ app.post('/pvt/orderForms/simulation', (req, res) => {
                             },
                             "additionalInfo": ""
                         }
+                    },
+                    {
+                        "id": "bcd delivery",
+                        "deliveryChannel": "delivery",
+                        "name": "bcd delivery",
+                        "shippingEstimate": "0bd",
+                        "price": 0,
+                        "availableDeliveryWindows": [
+                            {
+                                "startDateUtc": "2024-11-08T08:00:00+00:00",
+                                "endDateUtc": "2024-11-10T13:00:00+00:00",
+                                "price": 0
+                            }
+                        ],
+                        "pickupStoreInfo": null
                     }
                 ],
-                "stockBalance": 199,
+                "stockBalance": 250,
                 "deliveryChannels": [
                     {
                         "id": "delivery",
-                        "stockBalance": 179
+                        "stockBalance": 120
                     },
                     {
                         "id": "pickup-in-point",
-                        "stockBalance": 20
+                        "stockBalance": 130
                     }
                 ]
             }
         ],
-        "postalCode": "80250000",
-        // "allowMultipleDeliveries": true
+        "postalCode": "110110",
+        "allowMultipleDeliveries": true
     }).status(200).end();
 })
 
 app.post('/pvt/orders', (req, res) => {
+    const MARKETPLACE_RESPONSABLE_FOR_PROCESSING_PAYMENTS = null;
     const { marketplaceOrderId, clientProfileData: { email }, shippingData, items, customData } = req.body[0];
 
     const result = {
-        "marketplaceOrderId": marketplaceOrderId,
-        "orderId": uuid(),
-        "followUpEmail": "srivas@addi.com",
-        "items": [
-            {
-                "id": items[0].id,
-                "quantity": items[0].quantity,
-                "seller": items[0].seller,
-                "commission": items[0].commission,
-                "freightCommission": items[0].freightCommission,
-                "price": items[0].price,
-                "bundleItems": [],
-                "itemAttachment": {
-                    "name": null,
-                    "content": {}
-                },
-                "attachments": [],
-                "priceTags": [],
-                "measurementUnit": "un",
-                "unitMultiplier": 1,
-                "isGift": false
-            }
-        ],
-        "clientProfileData": {
-            "email": email,
-            "firstName": "Sergio",
-            "lastName": "Rivas",
-            "documentType": "cedulaCOL",
-            "document": "30012312",
-            "phone": "+573001231234",
-            "corporateName": null,
-            "tradeName": null,
-            "corporateDocument": null,
-            "stateInscription": null,
-            "corporatePhone": null,
-            "isCorporate": false,
-            "userProfileId": null
-        },
+        // "marketplaceOrderId": marketplaceOrderId,
+        // "orderId": uuid(),
+        // "followUpEmail": "srivas@addi.com",
+        // "items": [
+        //     {
+        //         "id": items[0].id,
+        //         "quantity": items[0].quantity,
+        //         "seller": items[0].seller,
+        //         "commission": items[0].commission,
+        //         "freightCommission": items[0].freightCommission,
+        //         "price": items[0].price,
+        //         "bundleItems": [],
+        //         "itemAttachment": {
+        //             "name": null,
+        //             "content": {}
+        //         },
+        //         "attachments": [],
+        //         "priceTags": [],
+        //         "measurementUnit": "un",
+        //         "unitMultiplier": 1,
+        //         "isGift": false
+        //     }
+        // ],
+        // "clientProfileData": {
+        //     "email": email,
+        //     "firstName": "Sergio",
+        //     "lastName": "Rivas",
+        //     "documentType": "cedulaCOL",
+        //     "document": "30012312",
+        //     "phone": "+573001231234",
+        //     "corporateName": null,
+        //     "tradeName": null,
+        //     "corporateDocument": null,
+        //     "stateInscription": null,
+        //     "corporatePhone": null,
+        //     "isCorporate": false,
+        //     "userProfileId": null
+        // },
         "shippingData": shippingData,
-        "customData": customData,
-        "paymentData": null,
-        "allowMultipleDeliveries": true
+        // "customData": customData,
+        // "paymentData": MARKETPLACE_RESPONSABLE_FOR_PROCESSING_PAYMENTS,
+        // "allowMultipleDeliveries": true
     };
 
     res.json([result]).status(200).end();
