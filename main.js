@@ -32,13 +32,15 @@ app.use(bodyParser.json({
 }));
 
 app.get('/webhook-raw', (req, res) => {
-    console.log('rawBody', req.rawBody);
+    console.log('[raw] headers', req.headers);
+    console.log('[raw] rawBody', req.rawBody);
     res.status(200).end();
 })
 
 
 app.post('/webhook-raw', (req, res) => {
-    console.log('rawBody', req.rawBody);
+    console.log('[raw] headers', req.headers);
+    console.log('[raw] rawBody', req.rawBody);
     res.status(200).end();
 })
 
