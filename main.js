@@ -25,6 +25,17 @@ const logger = winston.createLogger({
     ],
 });
 
+app.get('/webhook-raw', bodyParser.raw({ type: 'application/json' }), (req, res) => {
+    console.log('webhook-raw', req.body);
+    res.status(200).end();
+})
+
+
+app.post('/webhook-raw', bodyParser.raw({ type: 'application/json' }), (req, res) => {
+    console.log('webhook-raw', req.body);
+    res.status(200).end();
+})
+
 app.use(cors());
 app.use(bodyParser.json())
 
