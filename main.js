@@ -25,14 +25,20 @@ const logger = winston.createLogger({
     ],
 });
 
-app.get('/webhook-raw', bodyParser.raw({ type: 'application/json' }), (req, res) => {
-    console.log('webhook-raw', req.body);
+app.use(bodyParser.json({
+    verify: (req, res, buf, encoding) => {
+        req.rawBody = buf.toString(encoding || 'utf-8');
+    }
+}));
+
+app.get('/webhook-raw', (req, res) => {
+    console.log('rawBody', req.rawBody);
     res.status(200).end();
 })
 
 
-app.post('/webhook-raw', bodyParser.raw({ type: 'application/json' }), (req, res) => {
-    console.log('webhook-raw', req.body);
+app.post('/webhook-raw', (req, res) => {
+    console.log('rawBody', req.rawBody);
     res.status(200).end();
 })
 
